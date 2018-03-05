@@ -1,0 +1,31 @@
+.header {
+    height: 100px;
+    background-color: #abcdef;
+}
+.footer {
+    height: 100px;
+    background-color: #abcdef;
+}
+.content {
+    top: 100px;
+    bottom: 100px;
+    left: 0;
+    right: 0;
+    background-color: green;
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.composition-area {
+    height: 40px;
+    padding: 5px;
+}
+
+.composition-area textarea {
+    height: 100%;
+    width: 100%;
+    border: 1px solid #abcdef;
+    /* outline: none; */
+    resize: none;
+}
