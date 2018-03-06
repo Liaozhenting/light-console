@@ -15,14 +15,18 @@ export default class Bash {
         //Append input to history
         
         const time = new Date().format('hh:mm:ss')
-        let history = currentState.history
-        history.unshift({
-            cwd: currentState.cwd,
-            value: input,
-            time
-        })
+        // let history = currentState.history
+        // history.unshift({
+        //     cwd: currentState.cwd,
+        //     value: input,
+        //     time
+        // })
         const newState = Object.assign({}, currentState, {
-            history
+            history:currentState.history.concat({
+                cwd: currentState.cwd,
+                value: input,
+                time
+            }),
         })
 
         const commandList = BashParse.parse(input)
@@ -30,15 +34,12 @@ export default class Bash {
     }
 
     runCommands(commands, state) {
-
         let errorOccurred = false;
         const reducer = (newState, command) => {
             if (command.name === '') {
                 return newState
             } else if (this.commands[command.name]) {
- 
                 newState = this.commands[command.name].exec(newState,command)
-
                 return newState;
             } else {
                 //error
@@ -46,13 +47,10 @@ export default class Bash {
                 return newState
             }
         }
-
         while (!errorOccurred && commands.length) {
             const dependentCommands = commands.shift();
-            console.log(state)
             state = dependentCommands.reduce(reducer, state)
         }
-
         return state
     }
 

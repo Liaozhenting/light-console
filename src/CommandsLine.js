@@ -2,7 +2,7 @@ import React from 'react';
 import InfoBox from './InfoBox'
 import Bash from './bash'
 import Styles from './styles'
-
+const TAB_CHAR_CODE = 9;
 const noop = () => { };
 class CommandsLine extends React.Component {
 
@@ -28,7 +28,6 @@ class CommandsLine extends React.Component {
         structure: {},
         styles: {},
         theme: '',
-
     }
 
     onKeyUp(evt) {
@@ -37,7 +36,6 @@ class CommandsLine extends React.Component {
             const newState = this.Bash.execute(input, this.state);
             this.setState(newState);
             this.refs.textarea.value = '';
-
         }
     }
 

@@ -139,7 +139,7 @@ export default class InfoBox extends Component {
     const style = Styles.dark;
     const displayables = clone(this.props.children);
     if (this.props.flipped && !this.props.reversed) {
-      displayables.reverse();
+      // displayables.reverse();
     }
 
     const loadSpinner = (<div ref={e => { this.loadingSpinner = e; }}>
