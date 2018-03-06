@@ -32,10 +32,11 @@ export default class Bash {
 
         let errorOccurred = false;
         const reducer = (newState, command) => {
+
             if (command.name === '') {
                 return newState
-            } else if (this.commands[command.value]) {
-                // const newState = this.commands[command.name].exec(newState,command)
+            } else if (this.commands[command.name]) {
+                const newState = this.commands[command.name].exec(newState,command)
 
                 return newState;
             } else {
@@ -47,6 +48,7 @@ export default class Bash {
 
         while (!errorOccurred && commands.length) {
             const dependentCommands = commands.shift();
+ 
             state = dependentCommands.reduce(reducer, state)
         }
 
