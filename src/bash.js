@@ -13,8 +13,9 @@ export default class Bash {
         this.prevCommands.push(input);
         this.prevCommandsIndex = this.prevCommands.length;
         //Append input to history
-        let history = currentState.history
+        
         const time = new Date().format('hh:mm:ss')
+        let history = currentState.history
         history.unshift({
             cwd: currentState.cwd,
             value: input,
@@ -32,11 +33,11 @@ export default class Bash {
 
         let errorOccurred = false;
         const reducer = (newState, command) => {
-
             if (command.name === '') {
                 return newState
             } else if (this.commands[command.name]) {
-                const newState = this.commands[command.name].exec(newState,command)
+ 
+                newState = this.commands[command.name].exec(newState,command)
 
                 return newState;
             } else {
@@ -48,7 +49,7 @@ export default class Bash {
 
         while (!errorOccurred && commands.length) {
             const dependentCommands = commands.shift();
- 
+            console.log(state)
             state = dependentCommands.reduce(reducer, state)
         }
 

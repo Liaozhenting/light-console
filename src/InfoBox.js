@@ -104,7 +104,7 @@ export default class InfoBox extends Component {
       this.scrollable.scrollTop,
       this.scrollable.scrollHeight,
       this.scrollable.clientHeight);
-    return passedThreshold && !this.state.isInfiniteLoading && this.props.shouldTriggerLoad();
+    // return passedThreshold && !this.state.isInfiniteLoading && this.props.shouldTriggerLoad();
   }
 
   updateScrollTop() {
