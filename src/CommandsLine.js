@@ -3,6 +3,7 @@ import InfoBox from './InfoBox'
 import Bash from './bash'
 import Styles from './styles'
 const TAB_CHAR_CODE = 9;
+const ENTER_CHAR_CODE = 13;
 const noop = () => { };
 class CommandsLine extends React.Component {
 
@@ -31,12 +32,19 @@ class CommandsLine extends React.Component {
     }
 
     onKeyUp(evt) {
-        if (evt.key === 'Enter') {
+        let keyCode = evt.keyCode || evt.which;
+        if (keyCode === ENTER_CHAR_CODE) {
             const input = evt.target.value;
             const newState = this.Bash.execute(input, this.state);
             this.setState(newState);
             this.refs.textarea.value = '';
+            evt.preventDefault();
         }
+        else if(keyCode === TAB_CHAR_CODE){
+            this.attemptAutocomplete()
+            evt.preventDefault();
+        }
+
     }
 
     renderHistoryItem(style) {
