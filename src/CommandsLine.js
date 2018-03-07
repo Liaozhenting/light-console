@@ -6,7 +6,6 @@ const TAB_CHAR_CODE = 9;
 const ENTER_CHAR_CODE = 13;
 const noop = () => { };
 class CommandsLine extends React.Component {
-
     constructor({ history, extensions = {} }) {
         super();
         let prefix = 'my'
@@ -46,7 +45,13 @@ class CommandsLine extends React.Component {
         }
 
     }
-
+    attemptAutocomplete (){
+      const input = this.refs.textarea.value;
+      const suggestion = this.Bash.autocomplete(input,this.state);
+      if(suggestion){
+        this.refs.textarea.value = suggestion;
+      }
+    }
     renderHistoryItem(style) {
 
         return (item, key) => {

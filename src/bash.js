@@ -8,7 +8,27 @@ export default class Bash {
         this.prevCommands = [];
         this.prevCommandsIndex = 0;
     }
+    autocomplete(input){
+      const tokens = input.split(/ +/);
+      let token = tokens.pop();
+      const filter = item => item.indexOf(token) === 0;
+      const result = str => tokens.concat(str).join(' ');
 
+      if (tokens.length === 0) {
+          const suggestions = Object.keys(this.commands).filter(filter);
+          return suggestions.length === 1 ? result(suggestions[0]) : null;
+      } else {
+          const pathList = token.split('/');
+          token = pathList.pop();
+          const partialPath = pathList.join('/');
+          const path = Util.extractPath(partialPath, cwd);
+          const { err, dir } = Util.getDirectoryByPath(structure, path);
+          if (err) return null;
+          const suggestions = Object.keys(dir).filter(filter);
+          const prefix = partialPath ? `${partialPath}/` : '';
+          return suggestions.length === 1 ? result(`${prefix}${suggestions[0]}`) : null;
+      }
+    }
     execute(input, currentState) {
         this.prevCommands.push(input);
         this.prevCommandsIndex = this.prevCommands.length;
