@@ -4,6 +4,8 @@ import Bash from './bash'
 import Styles from './styles'
 const TAB_CHAR_CODE = 9;
 const ENTER_CHAR_CODE = 13;
+const UP_CHAR_CODE = 38;
+const DOWN_CHAR_CODE = 40;
 const noop = () => { };
 class CommandsLine extends React.Component {
     constructor({ history, extensions = {} }) {
@@ -30,7 +32,7 @@ class CommandsLine extends React.Component {
         theme: '',
     }
 
-    onKeyUp(evt) {
+    onKeyDown(evt) {
         let keyCode = evt.keyCode || evt.which;
         if (keyCode === ENTER_CHAR_CODE) {
             const input = evt.target.value;
@@ -43,8 +45,21 @@ class CommandsLine extends React.Component {
             this.attemptAutocomplete()
             evt.preventDefault();
         }
+        else if(keyCode === UP_CHAR_CODE){
+            if(this.Bash.hasPrevCommand()){
+                this.refs.textarea.value = this.Bash.getPrevCommand();
+            } 
+        }
+        else if(keyCode === DOWN_CHAR_CODE){
+            if(this.Bash.hasNextCommand()){
+                this.refs.textarea.value = this.Bash.getNextCommand()
+            } else {
+                this.refs.textarea.value = '';
+            }
+        }
 
     }
+
     attemptAutocomplete (){
       const input = this.refs.textarea.value;
       const suggestion = this.Bash.autocomplete(input,this.state);
@@ -52,10 +67,9 @@ class CommandsLine extends React.Component {
         this.refs.textarea.value = suggestion;
       }
     }
+
     renderHistoryItem(style) {
-
         return (item, key) => {
-
             const prefix = item.hasOwnProperty('cwd') ? (
                 <span style={style.prefix}>{`${this.props.prefix} ~${item.cwd}$ `}</span>
             ) : undefined;
@@ -79,7 +93,7 @@ class CommandsLine extends React.Component {
             </InfoBox>
             <div className="composition-area">
                 <form onSubmit={() => { return false }}>
-                    <textarea ref="textarea" onKeyUp={evt => this.onKeyUp(evt)} spellCheck={false}></textarea>
+                    <textarea ref="textarea" onKeyDown={evt => this.onKeyDown(evt)} spellCheck={false}></textarea>
                 </form>
             </div>
         </div>
