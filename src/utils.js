@@ -1,27 +1,10 @@
-import { Children } from 'react';
-export function traverseTreeNodes(treeNodes, cb) {
-    const traverse = (subTreeNodes, level, parentChildrenPos, parentPos) => {
-        if (Array.isArray(subTreeNodes)) {
-            subTreeNodes = subTreeNodes.filter(item => !!item);
-        }
-        Children.forEach(subTreeNodes,(item,index)=>{
-            const pos = `${level}-${index}`;
-            parentChildrenPos.push(pos);
+import {Errors} from './const'
 
-            const childrenPos = [];
-            if(item.props.children && item.type && item.type.isTreeNode){
-                traverse(item.props.children,pos,childrenPos,pos)
-            }
-            cb(
-                item,
-                index,
-                pos,
-                item.key||pos,
-                childrenPos,
-                parentPos
-            )
+export function appendError(state,error,command){
+    return Object.assign({},state,{
+        error:true,
+        history:state.history.concat({
+            value:error.replace('$1',command)
         })
-    }
-    traverse(treeNodes, 0, []);
+    })
 }
-

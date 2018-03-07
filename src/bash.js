@@ -1,3 +1,5 @@
+import * as Util from './utils';
+import { Errors } from './const'
 import * as BashParse from './parser';
 import * as BaseCommands from './commands'
 import Date from './date'
@@ -17,7 +19,7 @@ export default class Bash {
         const time = new Date().format('hh:mm:ss')
         // let history = currentState.history
         // history.unshift({
-        //     cwd: currentState.cwd,
+        //     cwd: currentState.cwd,          
         //     value: input,
         //     time
         // })
@@ -44,7 +46,8 @@ export default class Bash {
             } else {
                 //error
                 errorOccurred = true;
-                return newState
+                
+                return Util.appendError(newState,Errors.COMMAND_NOT_FOUND,command.name)
             }
         }
         while (!errorOccurred && commands.length) {
@@ -53,7 +56,7 @@ export default class Bash {
         }
         return state
     }
-
+        
     autocomplete(input, { structure, cwd }) {
         const tokens = input.split(/ +/);
         let token = tokens.pop();
@@ -76,19 +79,19 @@ export default class Bash {
         }
     }
 
-    getPrevCommand(){
+    getPrevCommand() {
         return this.prevCommands[--this.prevCommandsIndex]
     }
 
-    getNextCommand(){
+    getNextCommand() {
         return this.prevCommands[++this.prevCommandsIndex]
     }
 
-    hasPrevCommand(){
-        return this.prevCommandsIndex !==0
+    hasPrevCommand() {
+        return this.prevCommandsIndex !== 0
     }
 
-    hasNextCommand(){
+    hasNextCommand() {
         return this.prevCommandsIndex !== this.prevCommands.length - 1;
     }
 }
