@@ -39,24 +39,28 @@ export default class Bash {
         let errorOccurred = false;
         const reducer = (newState, command) => {
             if (command.name === '') {
-                return newState
+                return newState;
             } else if (this.commands[command.name]) {
                 newState = this.commands[command.name].exec(newState, command)
                 return newState;
-            } else {
-                //error
+            } else if (Util.illegalInput(command.value)) {
+                //error or illegalInput
                 errorOccurred = true;
-                
-                return Util.appendError(newState,Errors.COMMAND_NOT_FOUND,command.name)
+                return Util.appendError(newState, Errors.ILLEGAL_INPUT, command.name)
+            }
+            else {
+                return newState;
+
             }
         }
         while (!errorOccurred && commands.length) {
             const dependentCommands = commands.shift();
             state = dependentCommands.reduce(reducer, state)
         }
+
         return state
     }
-        
+
     autocomplete(input, { structure, cwd }) {
         const tokens = input.split(/ +/);
         let token = tokens.pop();
@@ -80,11 +84,15 @@ export default class Bash {
     }
 
     getPrevCommand() {
-        return this.prevCommands[--this.prevCommandsIndex]
+        let result = this.prevCommands[--this.prevCommandsIndex];
+        if(result !== undefined)return result
+        return '';
     }
 
     getNextCommand() {
-        return this.prevCommands[++this.prevCommandsIndex]
+        let result = this.prevCommands[++this.prevCommandsIndex];
+        if(result !== undefined) return result
+        return '';
     }
 
     hasPrevCommand() {

@@ -16,6 +16,10 @@ BaseStyles.header = {
     padding: '5px 10px 0',
 };
 
+BaseStyles.pre = {
+    whiteSpace:'pre-wrap'
+}
+
 const circle = {
     borderRadius: '50%',
     display: 'inline-block',

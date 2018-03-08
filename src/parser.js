@@ -1,6 +1,6 @@
 export function parseInput(input) {
     let name = input
-    return {input,name}
+    return {value:input,name}
 }
 
 export function parse(inputs) {

@@ -74,7 +74,7 @@ class CommandsLine extends React.Component {
                 <span style={style.prefix}>{`${this.props.prefix} ~${item.cwd}$ `}</span>
             ) : undefined;
             const time = <span style={style.time}>{item.time}</span>
-            return <div data-id={`history-${key}`} key={key}>{time}{prefix}{item.value}</div>
+            return <pre style={style.pre} data-id={`history-${key}`} key={key}>{time}{prefix}{item.value}</pre>
         }
     }
 

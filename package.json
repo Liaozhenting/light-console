@@ -20,6 +20,7 @@
     "css-loader": "^0.28.10",
     "less": "^3.0.1",
     "less-loader": "^4.0.6",
+    "mockjs": "^1.0.1-beta3",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "style-loader": "^0.20.2",
