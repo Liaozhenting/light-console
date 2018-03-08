@@ -37,6 +37,7 @@ class CommandsLine extends React.Component {
         if (keyCode === ENTER_CHAR_CODE) {
             const input = evt.target.value;
             const newState = this.Bash.execute(input, this.state);
+            console.log(newState)
             this.setState(newState);
             this.refs.textarea.value = '';
             evt.preventDefault();

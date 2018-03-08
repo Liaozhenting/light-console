@@ -2,6 +2,8 @@ import * as Util from './utils';
 import { Errors } from './const'
 import * as BashParse from './parser';
 import * as BaseCommands from './commands'
+import action from './action';
+
 import Date from './date'
 
 export default class Bash {
@@ -17,12 +19,7 @@ export default class Bash {
         //Append input to history
 
         const time = new Date().format('hh:mm:ss')
-        // let history = currentState.history
-        // history.unshift({
-        //     cwd: currentState.cwd,          
-        //     value: input,
-        //     time
-        // })
+
         const newState = Object.assign({}, currentState, {
             history: currentState.history.concat({
                 cwd: currentState.cwd,
@@ -35,9 +32,9 @@ export default class Bash {
         return this.runCommands(commandList, newState)
     }
 
-    runCommands(commands, state) {
+    async runCommands(commands, state) {
         let errorOccurred = false;
-        const reducer = (newState, command) => {
+        const reducer =async (newState, command) => {
             if (command.name === '') {
                 return newState;
             } else if (this.commands[command.name]) {
@@ -49,16 +46,31 @@ export default class Bash {
                 return Util.appendError(newState, Errors.ILLEGAL_INPUT, command.name)
             }
             else {
-                return newState;
+                const result = await action.getOutput({ id: 'id', cmd: command.value })
+                if(result){
+                    //传值
+                    return Object.assign({}, newState, {
+                        history: newState.history.concat({
+                            value: result.cmd
+                        })
+                    })
+                }
+                return newState
 
             }
         }
-        while (!errorOccurred && commands.length) {
-            const dependentCommands = commands.shift();
-            state = dependentCommands.reduce(reducer, state)
-        }
 
+        const main =async function(){
+            if(!errorOccurred && commands.length){
+                let dependentCommands = commands.shift();
+                state=await reducer(state,dependentCommands) 
+                console.log(state)           
+            }
+
+        }
+        await main();
         return state
+
     }
 
     autocomplete(input, { structure, cwd }) {
@@ -85,13 +97,13 @@ export default class Bash {
 
     getPrevCommand() {
         let result = this.prevCommands[--this.prevCommandsIndex];
-        if(result !== undefined)return result
+        if (result !== undefined) return result
         return '';
     }
 
     getNextCommand() {
         let result = this.prevCommands[++this.prevCommandsIndex];
-        if(result !== undefined) return result
+        if (result !== undefined) return result
         return '';
     }
 

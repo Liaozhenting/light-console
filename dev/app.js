@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 //import the libarary
 import Component from '../'
 import '../assets/index.css'
-const  {InfoBox,CommandsLine} = Component;
+const  {CommandsLine} = Component;
 class App extends React.Component {
   render() {
     return <div>

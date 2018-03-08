@@ -30,6 +30,8 @@
   "dependencies": {
     "classnames": "2.x",
     "lodash.clone": "^4.5.0",
-    "prop-types": "^15.6.1"
+    "mockjs": "^1.0.1-beta3",
+    "prop-types": "^15.6.1",
+    "reqwest": "^2.0.5"
   }
 }
