@@ -38,6 +38,7 @@ class CommandsLine extends React.Component {
             const input = evt.target.value;
             const newState = this.Bash.execute(input, this.state);
             if(newState.__proto__.hasOwnProperty('then')){
+                this.setState(newState);
                 newState.then(res=>this.setState(res) )
             }else{
                 this.setState(newState);

@@ -3,7 +3,6 @@ import { Errors } from './const'
 import * as BashParse from './parser';
 import * as BaseCommands from './commands'
 import action from './action';
-
 import Date from './date'
 
 export default class Bash {
@@ -34,7 +33,8 @@ export default class Bash {
 
     runCommands(commands, state) {
         let errorOccurred = false;
-        const reducer =async (newState, command) => {           
+        const reducer = async (newState, command) => {
+
             if (command.name === '') {
                 return newState;
             } else if (this.commands[command.name]) {
@@ -46,31 +46,33 @@ export default class Bash {
                 return Util.appendError(newState, Errors.ILLEGAL_INPUT, command.name)
             }
             else {
-                const result = await action.getOutput({ id: 'id', cmd: command.value })
-                if(result){
-                    //传值
+                try {
+                    const result = await action.getOutput({ id: 'id', cmd: command.value })
                     return Object.assign({}, newState, {
                         history: newState.history.concat({
                             value: result.cmd
                         })
+
                     })
-                }else{
-                    return newState
+                } catch (e) {
+                    return Object.assign({}, newState, {
+                        history: newState.history.concat({
+                            value: Errors.COMMAND_FAIL
+                        })
+
+                    })
                 }
 
             }
+
         }
 
-        const main =async function(){
-            if(!errorOccurred && commands.length){
-                let dependentCommands = commands.shift();
-                state=await reducer(state,dependentCommands) 
-                return state
-            }
-            return state
+        while (!errorOccurred && commands.length) {
+            const dependentCommands = commands.shift();
+            state = dependentCommands.reduce(reducer, state)
         }
-        
-        return main();
+
+        return state;
 
     }
 
