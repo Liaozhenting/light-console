@@ -32,9 +32,9 @@ export default class Bash {
         return this.runCommands(commandList, newState)
     }
 
-    async runCommands(commands, state) {
+    runCommands(commands, state) {
         let errorOccurred = false;
-        const reducer =async (newState, command) => {
+        const reducer =async (newState, command) => {           
             if (command.name === '') {
                 return newState;
             } else if (this.commands[command.name]) {
@@ -54,8 +54,9 @@ export default class Bash {
                             value: result.cmd
                         })
                     })
+                }else{
+                    return newState
                 }
-                return newState
 
             }
         }
@@ -64,12 +65,12 @@ export default class Bash {
             if(!errorOccurred && commands.length){
                 let dependentCommands = commands.shift();
                 state=await reducer(state,dependentCommands) 
-                console.log(state)           
+                return state
             }
-
+            return state
         }
-        await main();
-        return state
+        
+        return main();
 
     }
 
